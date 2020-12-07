@@ -1,16 +1,28 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/grmpflh27/aoc_2020/aoc2020_shared"
+)
 
 const day int = <DAY>
+
 
 func main() {
 	fmt.Printf("Day %d\n", day)
 
-	fmt.Println("Answer 1")
+    var answer1 int
+	var answer2 int
+	inputItems := aoc2020_shared.Load("input<DAY>.txt", "\n")
+
+
+	fmt.Printf("Answer 1: %d\n", answer1)
 	fmt.Println("=======================")
 
-	fmt.Println("Answer 2")
+
+
+	fmt.Printf("Answer 2: %d\n", answer2)
 	fmt.Println("=======================")
 
 }
