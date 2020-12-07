@@ -22,7 +22,7 @@ func contains(s []int, e int) bool {
 func main() {
 	var answer1 int
 	var answer2 int
-	eReportItems := aoc2020_shared.Load("input1.txt", "\n")
+	eReportItems := aoc2020_shared.LoadInt("input1.txt", "\n")
 
 	// 2 product
 	fmt.Printf("Day %d\n", day)

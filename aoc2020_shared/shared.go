@@ -1,7 +1,6 @@
 package aoc2020_shared
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -9,13 +8,19 @@ import (
 	"strings"
 )
 
-func Load(fileName string, sep string) []int {
+// LoadInt - load input as int
+func LoadInt(fileName string, sep string) []int {
 	lines := loadInput(fileName, sep)
 	return convertToInt(lines)
 }
 
-func LoadStr(day int, sep string) [][]string {
-	fileName := fmt.Sprintf("./input_%v.txt", day)
+// LoadString - load input as str
+func LoadString(fileName string, sep string) []string {
+	return loadInput(fileName, "\n")
+}
+
+// LoadWords - load input as str
+func LoadWords(fileName string, sep string) [][]string {
 	lines := loadInput(fileName, "\n")
 	final := make([][]string, len(lines))
 	for i, line := range lines {
