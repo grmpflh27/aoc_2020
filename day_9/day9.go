@@ -48,7 +48,6 @@ func isValidNext(preamble []int, next int) bool {
 	smallerInPreamble := getSmaller(preamble, next)
 	subtracted := subtractNext(smallerInPreamble, next)
 	return hasIntersect(smallerInPreamble, subtracted)
-
 }
 
 func contiguousSumMatches(searchSpace []int, val int) bool {
