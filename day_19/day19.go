@@ -11,10 +11,6 @@ const day int = 19
 
 type ruleBook map[string][]string
 
-// func parseRule(rulez ruleBook, curRule string) ruleBook {
-// 	return rulez
-// }
-
 func ruleResolvable(rulez ruleBook, cur string) bool {
 	parts := strings.Split(cur, " | ")
 
@@ -38,52 +34,58 @@ func contains(s []int, e int) bool {
 	return false
 }
 
+func containsStr(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func getPerms(a []string, b []string) []string {
+	cnt := 0
+	perms := make([]string, len(a)*len(b))
+	for i := range a {
+		for j := range b {
+			perms[cnt] = a[i] + b[j]
+			cnt++
+		}
+	}
+	return perms
+}
+
 func resolveRule(rulez ruleBook, cur string) []string {
 	parts := strings.Split(cur, " | ")
 	resolved := make([]string, 0)
 
-	buffer := ""
+	// get all ops
 	for _, p := range parts {
 		nums := strings.Split(p, " ")
-		perms := make([][]string, 0)
-		multiPermIdx := make([]int, 0)
-		for i, curNum := range nums {
-			curOps := rulez[curNum]
-			if len(curOps) == 1 {
-				buffer += curOps[0]
-			} else {
-				multiPermIdx = append(multiPermIdx, i)
-				if len(buffer) != 0 {
-					for i := range curOps {
-						curOps[i] = buffer + curOps[i]
-					}
-				}
-				perms = append(perms, curOps)
-				buffer = ""
-			}
+		ops := make([][]string, 0)
+
+		size := 1
+		for _, curNum := range nums {
+			ops = append(ops, rulez[curNum])
+			size *= len(rulez[curNum])
 		}
 
-		// permute
-		permIdx := 0
-		for permIdx < len(perms)-1 {
-			if contains(multiPermIdx, permIdx) {
-				permutations := permute(perms[permIdx], perms[permIdx+1])
-				resolved = append(resolved, permutations...)
-			}
-			permIdx++
-		}
-
-		if len(buffer) != 0 {
-			if len(resolved) != 0 {
-				for i := range resolved {
-					resolved[i] = resolved[i] + buffer
+		cnt := 0
+		curPerms := make([]string, size)
+		for cnt < len(ops)-1 {
+			if len(ops[cnt]) > 1 && len(ops[cnt+1]) > 1 || cnt == 0 {
+				for i, perm := range getPerms(ops[cnt], ops[cnt+1]) {
+					curPerms[i] += perm
 				}
 			} else {
-				resolved = append(resolved, buffer)
+				for i := range curPerms {
+					curPerms[i] += ops[cnt+1][0]
+				}
 			}
 
-			buffer = ""
+			cnt++
 		}
+		resolved = append(resolved, curPerms...)
 	}
 
 	return resolved
@@ -127,17 +129,12 @@ func main() {
 		ruleCnt++
 	}
 
-	fmt.Println(ruleCnt, aIdx, bIdx)
-
 	rules := make(ruleBook, 0)
 	aRule := strings.Split(inputItems[aIdx], ": ")[0]
 	rules[aRule] = []string{"a"}
 
 	bRule := strings.Split(inputItems[bIdx], ": ")[0]
 	rules[bRule] = []string{"b"}
-
-	fmt.Printf("Answer 1: %d\n", answer1)
-	fmt.Println("=======================")
 
 	for len(rawRules) > 0 {
 		for k, v := range rawRules {
@@ -148,7 +145,18 @@ func main() {
 			}
 		}
 	}
-	fmt.Println(rules)
+	fmt.Println(rules["0"])
+
+	ruleCnt++
+	for ruleCnt < len(inputItems) {
+		curLine := inputItems[ruleCnt]
+		if containsStr(rules["0"], curLine) {
+			answer1++
+		}
+		ruleCnt++
+	}
+	fmt.Printf("Answer 1: %d\n", answer1)
+	fmt.Println("=======================")
 
 	fmt.Printf("Answer 2: %d\n", answer2)
 	fmt.Println("=======================")
